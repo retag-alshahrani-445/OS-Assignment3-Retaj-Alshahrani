@@ -31,16 +31,20 @@
 
 Document your development process with **minimum 3 entries** showing progression:
 
-### Entry 1 - [Date, Time]
-**What I implemented**: 
+### Entry 1 - [29 April 2026, 5:30 PM]
+**What I implemented**: Fork Repository and set  my Id 
+- Fork Repository on GitHub
+- Rename the repository 
+- Git clon https://github.com/retag-alshahrani-445/OS-Assignment3-Retaj-Alshahrani.git in VS code
+- Change the Id to my id
+- save and commit as "Set my student ID: 445052009"
+**Challenges encountered**: No challenges its esay becuse I have knowledge from the previous assignment.
 
-**Challenges encountered**: 
+**How I solved it**: No 
 
-**How I solved it**: 
+**Testing approach**: I have knowledge from the previous assignment
 
-**Testing approach**: 
-
-**Time spent**: 
+**Time spent**: 30 min
 
 ---
 
