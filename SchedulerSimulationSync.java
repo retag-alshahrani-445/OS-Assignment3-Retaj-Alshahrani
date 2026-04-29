@@ -4,9 +4,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Random;
-
-// ANSI Color Codes for enhanced terminal output
+import java.util.Random; 
+import java.util.concurrent.locks.ReentrantLock;
+  // ANSI Color Codes for enhanced terminal output 
 class Colors {
     public static final String RESET = "\u001B[0m";
     public static final String BOLD = "\u001B[1m";
@@ -27,38 +27,58 @@ class Colors {
 
 // ⚠️ SHARED RESOURCES - These need synchronization! ⚠️
 class SharedResources {
-    // TODO: Students will add synchronization mechanisms here
-    // HINT: Use ReentrantLock for mutual exclusion
-    // HINT: Use Semaphore for limiting concurrent access
+    // TODO: Students will add synchronization mechanisms here 
+    // HINT: Use ReentrantLock for mutual exclusion 
+    // HINT: Use Semaphore for limiting concurrent access 
+    public static int contextSwitchCount = 0;      // Shared counter - NEEDS PROTECTION! 
+    public static int completedProcessCount = 0;   // Shared counter - NEEDS PROTECTION! 
+    public static long totalWaitingTime = 0;       // Shared accumulator - NEEDS PROTECTION! 
+    public static List<String> executionLog = new ArrayList<>();  // Shared list - NEEDS PROTECTION! 
+    // TODO #1: Add a ReentrantLock(s) here to protect critical sections 
+    // Example: public static final ReentrantLock lock = new ReentrantLock(); 
+    // Task 1: i choese Fine-grained locks for each counter 
+    public static final ReentrantLock contextSwitchLock = new ReentrantLock();
+    public static final ReentrantLock completedProcessLock = new ReentrantLock();
+    public static final ReentrantLock waitingTimeLock = new ReentrantLock();
     
-    public static int contextSwitchCount = 0;      // Shared counter - NEEDS PROTECTION!
-    public static int completedProcessCount = 0;   // Shared counter - NEEDS PROTECTION!
-    public static long totalWaitingTime = 0;       // Shared accumulator - NEEDS PROTECTION!
-    public static List<String> executionLog = new ArrayList<>();  // Shared list - NEEDS PROTECTION!
+    // TODO #2: Add a Semaphore to limit concurrent process execution 
     
-    // TODO #1: Add a ReentrantLock(s) here to protect critical sections
-    // Example: public static final ReentrantLock lock = new ReentrantLock();
-    
-    // TODO #2: Add a Semaphore to limit concurrent process execution
-    // Example: public static final Semaphore cpuSemaphore = new Semaphore(1);
-    
-    // Method to increment context switch counter
-    public static void incrementContextSwitch() {
-        // TODO: Protect this critical section with a lock
-        // RACE CONDITION: Multiple threads might read and write simultaneously!
-        contextSwitchCount++;
+    // Example: public static final Semaphore cpuSemaphore = new Semaphore(1); 
+     
+    // Method to increment context switch counter 
+    public static void incrementContextSwitch() { 
+        // TODO: Protect this critical section with a lock 
+        contextSwitchLock.lock();
+        try {
+            // RACE CONDITION: Multiple threads might read and write simultaneously!
+            contextSwitchCount++;
+        } finally {
+            contextSwitchLock.unlock();}
+
+    }
+    // Method to increment completed process counter==ReentrantLock
+    public static void incrementCompletedProcess(){
+        //TODO: Protect this critical section with a lock
+        completedProcessLock.lock();
+        try{
+            completedProcessCount++;
+            
+        } finally{ 
+            completedProcessLock.unlock();
+            }
+        
     }
     
-    // Method to increment completed process counter
-    public static void incrementCompletedProcess() {
+    // Method to add waiting time  
+    public static void addWaitingTime(long time){
         // TODO: Protect this critical section with a lock
-        completedProcessCount++;
+        waitingTimeLock.lock();
+    try {
+        totalWaitingTime+= time;
+    } finally {
+        waitingTimeLock.unlock();
     }
-    
-    // Method to add waiting time
-    public static void addWaitingTime(long time) {
-        // TODO: Protect this critical section with a lock
-        totalWaitingTime += time;
+     
     }
     
     // Method to log execution
