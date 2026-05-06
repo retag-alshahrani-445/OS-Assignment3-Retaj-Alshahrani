@@ -48,7 +48,7 @@ class SharedResources {
     // TODO #2: Add a Semaphore to limit concurrent process execution 
     // Binary semaphore - only 1 process can "execute" at a time
     // Task 3
-    public static final Semaphore cpuSemaphore = new Semaphore(2);
+    public static final Semaphore cpuSemaphore = new Semaphore(1);
     // Example: public static final Semaphore cpuSemaphore = new Semaphore(1); 
      
     // Method to increment context switch counter 
